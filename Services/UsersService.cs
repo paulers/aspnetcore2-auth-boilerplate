@@ -119,7 +119,26 @@ namespace AspNetCore2AuthBoilerplate.Services
 
         public async Task<bool> ValidateCredentials(string username, string password)
         {
-            return true;
+            using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                // Grab password from database
+                var passQuery = await db.QueryAsync<string>("SELECT Password FROM Users WHERE Email = @email", new { email = username });
+                var passResult = passQuery.FirstOrDefault();
+
+                // If empty field, gg out
+                if (string.IsNullOrEmpty(passResult))
+                {
+                    return false;
+                }
+
+                var hashHelper = new HashHelper();
+                if (hashHelper.VerifyHashedPassword(passResult, password))
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
     }
 }
