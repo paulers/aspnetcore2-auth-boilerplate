@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AspNetCore2AuthBoilerplate.Controllers
@@ -209,6 +212,49 @@ namespace AspNetCore2AuthBoilerplate.Controllers
             }
 
             return Redirect("~/");
+        }
+
+        [HttpPost("token")]
+        public async Task<IActionResult> RequestToken([FromBody]TokenRequestModel request)
+        {
+            var validRequest = await _usersService.ValidateClientIdAndSecretCombo(request.ClientId, request.Secret);
+            if (validRequest)
+            {
+                var userId = await _usersService.GetUserIdentityByClientId(request.ClientId);
+                if (userId == null)
+                {
+                    return BadRequest("Client Id is incorrect.");
+                }
+
+                var claims = new[]
+                {
+                    new Claim("uid", userId.ToString())
+                };
+
+                // create key and use it to hash the signed crednetials
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServerKey"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                // set token expiry
+                var expires = DateTime.Now.AddMinutes(60);
+
+                // create token object
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["Authentication:Tokens:Issuer"],
+                    audience: _configuration["Authentication:Tokens:Issuer"],
+                    claims: claims,
+                    expires: expires,
+                    signingCredentials: creds);
+
+                // we're golden
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expires
+                });
+            }
+
+            // we're not golden
+            return BadRequest("Could not verify identity.");
         }
 
         #region Private Methods
