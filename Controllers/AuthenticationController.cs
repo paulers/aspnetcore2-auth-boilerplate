@@ -214,6 +214,11 @@ namespace AspNetCore2AuthBoilerplate.Controllers
             return Redirect("~/");
         }
 
+        /// <summary>
+        /// Generates a Bearer token based on the clientId and secret passed in by the user
+        /// </summary>
+        /// <param name="request">Object containing the clientId and secret</param>
+        /// <returns>JSON object with the bearer token and the expiry date</returns>
         [HttpPost("token")]
         public async Task<IActionResult> RequestToken([FromBody]TokenRequestModel request)
         {
@@ -232,7 +237,7 @@ namespace AspNetCore2AuthBoilerplate.Controllers
                 };
 
                 // create key and use it to hash the signed crednetials
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["ServerKey"]));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:Tokens:Key"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 // set token expiry
                 var expires = DateTime.Now.AddMinutes(60);
