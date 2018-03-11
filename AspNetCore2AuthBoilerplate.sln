@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore2AuthBoilerplate", "AspNetCore2AuthBoilerplate.csproj", "{EABF9B0A-5B66-48B2-8616-45123E345CAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EABF9B0A-5B66-48B2-8616-45123E345CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EABF9B0A-5B66-48B2-8616-45123E345CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EABF9B0A-5B66-48B2-8616-45123E345CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EABF9B0A-5B66-48B2-8616-45123E345CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8B353217-66DB-4202-84B6-28085E24D104}
+	EndGlobalSection
+EndGlobal
